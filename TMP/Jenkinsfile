@@ -35,14 +35,14 @@ pipeline {
         //         }
         //     }
         // }
-        stage("Rebot Merge Report") {
-            steps {
-                bat """${environment_rebot} -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
-            }
-        }
+        // stage("Rebot Merge Report") {
+        //     steps {
+        //         bat """${environment_rebot} -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
+        //     }
+        // }
         stage('Report') {
             steps {
-                robot archiveDirName: 'robot-plugin', outputFileName: 'output.xml', outputPath: '${workspace_path}\\Result', overwriteXAxisLabel: '', passThreshold: 100.0, unstableThreshold: 80.0 
+                robot archiveDirName: 'robot-plugin', outputFileName: 'output.xml', outputPath: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\Result', overwriteXAxisLabel: '', passThreshold: 100.0, unstableThreshold: 80.0 
             }
         }
     }
