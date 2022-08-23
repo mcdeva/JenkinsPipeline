@@ -1,15 +1,36 @@
+def workspace_path = "C:\\Users\\mc\\ArcadiaAutomateJenkins"
+
 pipeline {
     agent any
 
     stages {
         stage('Checkout Buffet') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\buffet'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/arcadia.automate.buffet.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\arcadia.automate.buffet'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/arcadia.automate.buffet.git']]])
             }
         }
         stage('Checkout TMP API') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\tmp.automate.api'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/tmp.automate.robot.api.testing.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\tmp.automate.robot.api.testing'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/tmp.automate.robot.api.testing.git']]])
+            }
+        }
+        stage("Run Robot API Parallel") {
+            parallel {
+                stage("Login") {
+                    steps {
+                        bat 'robot -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_login.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\TMP_API_Login.robot'
+                    }
+                }
+                stage("Search Flight") {
+                    steps {
+                        bat 'robot -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight'
+                    }
+                }
+                stage("Pricing Structure") {
+                    steps {
+                        bat 'robot -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure.xml ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New'
+                    }
+                }
             }
         }
     }
