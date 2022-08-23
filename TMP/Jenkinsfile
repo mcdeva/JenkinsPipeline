@@ -1,4 +1,5 @@
 def environment_robot = "C:\\Users\\mc\\env-python\\robot-tmp\\Scripts\\robot"
+def environment_rebot = "C:\\Users\\mc\\env-python\\robot-tmp\\Scripts\\rebot"
 def workspace_path = "C:\\Users\\mc\\ArcadiaAutomateJenkins"
 
 pipeline {
@@ -32,6 +33,16 @@ pipeline {
                         bat """${environment_robot} -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure.xml ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New"""
                     }
                 }
+            }
+        }
+        stage("Rebot Merge Report") {
+            steps {
+                bat """${environment_rebot} -o output.xml -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
+            }
+        }
+        stage('Report') {
+            steps {
+                robot archiveDirName: 'robot-plugin', outputFileName: 'output.xml', outputPath: '${workspace_path}\\Result', overwriteXAxisLabel: '', passThreshold: 100.0, unstableThreshold: 80.0 
             }
         }
     }
