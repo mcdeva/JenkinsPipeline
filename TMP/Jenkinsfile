@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\JenkinsPipeline'], [$class: 'CleanCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[credentialsId: '677170dd-cf91-4a66-b097-2fa1a68482cb', url: 'https://github.com/mcdeva/JenkinsPipeline.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\JenkinsPipeline'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[credentialsId: 'f563abd0-ab5c-4ec8-b434-4dfe75a8bf7d', url: 'https://Rukpong@bitbucket.org/arcadiasoftware/arcadia.automate.buffet.git']]])
             }
         }
     }
