@@ -2,9 +2,14 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Buffet') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[credentialsId: 'a176346d-57d6-492b-9d62-4f79d7c700ea', url: 'https://Rukpong@bitbucket.org/arcadiasoftware/arcadia.automate.buffet.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\buffet'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/arcadia.automate.buffet.git']]])
+            }
+        }
+        stage('Checkout TMP API') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\tmp.automate.api'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/tmp.automate.robot.api.testing.git']]])
             }
         }
     }
