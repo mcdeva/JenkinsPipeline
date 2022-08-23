@@ -16,30 +16,30 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\tmp.automate.robot.api.testing'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/tmp.automate.robot.api.testing.git']]])
             }
         }
-        // stage("Run Robot API Parallel") {
-        //     parallel {
-        //         stage("Login") {
-        //             steps {
-        //                 bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_login.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\TMP_API_Login.robot"""
-        //             }
-        //         }
-        //         stage("Search Flight") {
-        //             steps {
-        //                 bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight"""
-        //             }
-        //         }
-        //         stage("Pricing Structure") {
-        //             steps {
-        //                 bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure.xml ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New"""
-        //             }
-        //         }
-        //     }
-        // }
-        // stage("Rebot Merge Report") {
-        //     steps {
-        //         bat """${environment_rebot} -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
-        //     }
-        // }
+        stage("Run Robot API Parallel") {
+            parallel {
+                stage("Login") {
+                    steps {
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_login.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\TMP_API_Login.robot"""
+                    }
+                }
+                stage("Search Flight") {
+                    steps {
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight"""
+                    }
+                }
+                stage("Pricing Structure") {
+                    steps {
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure.xml ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New"""
+                    }
+                }
+            }
+        }
+        stage("Rebot Merge Report") {
+            steps {
+                bat """${environment_rebot} -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
+            }
+        }
         stage('Report') {
             steps {
                 robot archiveDirName: 'robot-plugin', outputFileName: 'output.xml', outputPath: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\Result', overwriteXAxisLabel: '', passThreshold: 100.0, unstableThreshold: 80.0 
