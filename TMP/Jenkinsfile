@@ -37,7 +37,7 @@ pipeline {
         }
         stage("Rebot Merge Report") {
             steps {
-                bat """${environment_rebot} -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
+                bat """${environment_rebot} -R -N "Result automate API" -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
             }
         }
         stage('Report') {
