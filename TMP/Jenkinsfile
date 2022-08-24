@@ -16,33 +16,57 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\tmp.automate.robot.api.testing'], [$class: 'CleanBeforeCheckout', deleteUntrackedNestedRepositories: true]], userRemoteConfigs: [[url: 'https://Rukpong:ATBBhEuW8hXEABeFm7h8GsALqXav827865E9@bitbucket.org/arcadiasoftware/tmp.automate.robot.api.testing.git']]])
             }
         }
-        stage("Run Robot API Parallel") {
+        stage("Run Parallel Login") {
+            steps {
+                bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_login.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\TMP_API_Login.robot"""
+            }
+        }
+        stage("Run Parallel Search Flight") {
             parallel {
-                stage("Login") {
+                stage("Oneway") {
                     steps {
-                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_login.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\TMP_API_Login.robot"""
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight_oneway.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight\\TMP_API_Search_Flight_Self_Oneway.robot"""
                     }
                 }
-                stage("Search Flight") {
+                stage("Roundtrip") {
                     steps {
-                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight"""
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight_roundtrip.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight\\TMP_API_Search_Flight_Self_Roundtrip.robot"""
                     }
                 }
-                stage("Pricing Structure") {
+                stage("Multicity") {
                     steps {
-                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure.xml ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New"""
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_search_flight_multicity.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\SearchFlight\\TMP_API_Search_Flight_Self_Multicity.robot"""
+                    }
+                }
+            }
+        }
+        stage("Run Parallel Pricing Structure") {
+            parallel {
+                stage("Oneway") {
+                    steps {
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure_oneway.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New\\TMP_API_Pricing_Structure_Oneway.robot"""
+                    }
+                }
+                stage("Roundtrip") {
+                    steps {
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure_roundtrip.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New\\TMP_API_Pricing Structure_Roundtrip.robot"""
+                    }
+                }
+                stage("Multicity") {
+                    steps {
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure_multicity.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New\\TMP_API_Pricing_Structure_Multi_City.robot"""
                     }
                 }
             }
         }
         stage("Rebot Merge Report") {
             steps {
-                bat """${environment_rebot} -R -N "Result automate API" -o output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\*.xml"""
+                bat """${environment_rebot} -R -N "Result automate API" -o report_output.xml --nostatusrc -d ${workspace_path}\\Result ${workspace_path}\\Result\\output*.xml"""
             }
         }
         stage('Report') {
             steps {
-                robot archiveDirName: 'robot-plugin', outputFileName: 'output.xml', outputPath: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\Result', overwriteXAxisLabel: '', passThreshold: 100.0, unstableThreshold: 80.0 
+                robot archiveDirName: 'robot-plugin', outputFileName: 'report_output.xml', outputPath: 'C:\\Users\\mc\\ArcadiaAutomateJenkins\\Result', overwriteXAxisLabel: '', passThreshold: 100.0, unstableThreshold: 80.0 
             }
         }
     }
