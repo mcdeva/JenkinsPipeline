@@ -49,7 +49,7 @@ pipeline {
                 }
                 stage("Roundtrip") {
                     steps {
-                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure_roundtrip.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New\\TMP_API_Pricing Structure_Roundtrip.robot"""
+                        bat """${environment_robot} --nostatusrc -d ${workspace_path}\\Result -v TEST_SITE:QA -o output_pricing_structure_roundtrip.xml -e On-Hold ${workspace_path}\\tmp.automate.robot.api.testing\\TestSuites\\PricingStructure\\New\\TMP_API_Pricing_Structure_Roundtrip.robot"""
                     }
                 }
                 stage("Multicity") {
